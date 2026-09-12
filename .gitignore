@@ -1,0 +1,7 @@
+.venv/
+pipeline/cache/
+__pycache__/
+*.pyc
+*.pdf
+.DS_Store
+node_modules/

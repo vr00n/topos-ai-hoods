@@ -1,0 +1,14 @@
+[
+  {"slug": "nyc", "name": "New York City", "country": "USA", "osm_relation": 175905, "center": [-74.0060, 40.7128], "center_label": "City Hall"},
+  {"slug": "london", "name": "London", "country": "UK", "osm_relation": 175342, "center": [-0.1276, 51.5074], "center_label": "Charing Cross"},
+  {"slug": "paris", "name": "Paris", "country": "France", "osm_relation": 7444, "center": [2.3470, 48.8590], "center_label": "Notre-Dame"},
+  {"slug": "berlin", "name": "Berlin", "country": "Germany", "osm_relation": 62422, "center": [13.4050, 52.5200], "center_label": "Alexanderplatz"},
+  {"slug": "chicago", "name": "Chicago", "country": "USA", "osm_relation": 122604, "center": [-87.6298, 41.8781], "center_label": "The Loop"},
+  {"slug": "sf", "name": "San Francisco", "country": "USA", "osm_relation": 111968, "center": [-122.4194, 37.7749], "center_label": "Civic Center"},
+  {"slug": "toronto", "name": "Toronto", "country": "Canada", "osm_relation": 324211, "center": [-79.3832, 43.6532], "center_label": "Nathan Phillips Square"},
+  {"slug": "amsterdam", "name": "Amsterdam", "country": "Netherlands", "osm_relation": 271110, "center": [4.8952, 52.3702], "center_label": "Dam Square"},
+  {"slug": "boston", "name": "Boston", "country": "USA", "osm_relation": 2315704, "center": [-71.0589, 42.3601], "center_label": "Downtown Crossing"},
+  {"slug": "dc", "name": "Washington, DC", "country": "USA", "osm_relation": 162069, "center": [-77.0365, 38.8977], "center_label": "White House"},
+  {"slug": "barcelona", "name": "Barcelona", "country": "Spain", "osm_relation": 347950, "center": [2.1734, 41.3851], "center_label": "Plaça de Catalunya"},
+  {"slug": "la", "name": "Los Angeles", "country": "USA", "osm_relation": 207359, "center": [-118.2437, 34.0522], "center_label": "Downtown LA"}
+]

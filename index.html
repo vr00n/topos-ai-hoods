@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Boroughs for the 21st Century — data-driven city partitions from OpenStreetMap</title>
+  <meta name="description" content="Re-partition any city into K new 'boroughs' by clustering neighborhoods on OpenStreetMap features. A recreation of Topos' 'Five Boroughs for the 21st Century'." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,2 28,9 28,23 16,30 4,23 4,9' fill='%234fc47f'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <h1>Boroughs for the 21<sup>st</sup> Century</h1>
+      <span class="sub">neighborhood vectors from OpenStreetMap → PCA → k-means</span>
+    </div>
+    <div class="controls">
+      <label class="ctl">
+        <span>City</span>
+        <select id="city-select"></select>
+      </label>
+      <label class="ctl">
+        <span>Boroughs (K) <b id="k-value">5</b></span>
+        <input id="k-range" type="range" min="2" max="12" value="5" />
+      </label>
+      <div class="ctl">
+        <span>Colour by</span>
+        <div class="seg" id="mode-seg">
+          <button data-mode="clusters" class="active">Clusters</button>
+          <button data-mode="pc0">d1</button>
+          <button data-mode="pc1">d2</button>
+          <button data-mode="feature">Feature</button>
+        </div>
+      </div>
+      <label class="ctl" id="feature-ctl" hidden>
+        <span>Feature</span>
+        <select id="feature-select"></select>
+      </label>
+      <button id="about-btn" class="linkish">About</button>
+    </div>
+  </header>
+
+  <main>
+    <aside id="panel">
+      <section class="card" id="summary">
+        <div id="summary-text" class="muted">Loading…</div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Input features</h2>
+          <span class="muted small" id="feature-count"></span>
+        </div>
+        <p class="muted small">Like the Topos platform, you can change which dimensions power the clustering. Toggle whole groups or expand to pick individual features.</p>
+        <div id="groups"></div>
+        <details class="advanced">
+          <summary>Advanced</summary>
+          <label class="row"><input type="checkbox" id="log-toggle" checked /> log-scale densities before standardising</label>
+          <label class="row">PCA variance kept <b id="var-value">86%</b>
+            <input id="var-range" type="range" min="50" max="99" value="86" /></label>
+          <label class="row">Random seed <input id="seed" type="number" value="42" min="0" max="9999" /></label>
+        </details>
+      </section>
+
+      <section class="card" id="clusters-card">
+        <div class="card-head"><h2 id="clusters-title">The new boroughs</h2></div>
+        <div id="clusters"></div>
+      </section>
+
+      <section class="card" id="pcs-card">
+        <div class="card-head"><h2>Dimensional exploration</h2></div>
+        <p class="muted small">Neighborhoods as vectors: each point is one hex cell plotted on the two most significant PCA dimensions.</p>
+        <canvas id="scatter" width="320" height="260"></canvas>
+        <div id="pcs"></div>
+      </section>
+
+      <footer class="muted small">
+        Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>.
+        Basemap © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>.
+        Inspired by <a href="https://medium.com/topos-ai/five-boroughs-for-the-21st-century-8da941f53618" target="_blank" rel="noopener">Topos, “Five Boroughs for the 21st Century”</a> (2017).
+      </footer>
+    </aside>
+
+    <div id="map-wrap">
+      <div id="map"></div>
+      <div id="legend" class="legend" hidden></div>
+      <div id="tooltip" class="tooltip" hidden></div>
+    </div>
+  </main>
+
+  <div id="about" class="modal" hidden>
+    <div class="modal-body">
+      <button class="close" id="about-close" aria-label="Close">×</button>
+      <h2>What is this?</h2>
+      <p>In 2017 <a href="https://medium.com/topos-ai/five-boroughs-for-the-21st-century-8da941f53618" target="_blank" rel="noopener">Topos asked</a> what New York's five boroughs would look like if they were drawn from data instead of 1898 politics. They described each neighborhood as a 65-dimensional vector, reduced it with PCA to 16 dimensions (86% of variance), and ran k-means with K=5. The result was five concentric “boroughs” — <em>Minhattan, The Ring, North Bend, South Bend, The Meadows</em> — that ignored the rivers entirely.</p>
+      <p>This app recreates that method for many cities using only <strong>OpenStreetMap</strong> data, and lets you turn the knobs.</p>
+      <h3>Method</h3>
+      <ol>
+        <li><strong>Neighborhoods.</strong> The city's administrative boundary is tiled with a hexagonal grid (~700–900 cells per city; the radius adapts to city size). Topos used ZIP codes; hexes are consistent across countries.</li>
+        <li><strong>Vectors.</strong> For each hex we count OSM points of interest (bars, cafés, museums, shops, schools, stations, bus stops, street segments, buildings, tall buildings, trees…) and convert them to densities per km² of land, plus land-use fractions (residential, commercial, industrial, green, water, beach). ~50 dimensions.</li>
+        <li><strong>PCA.</strong> Features are (optionally log-) transformed, z-scored, and reduced to the smallest number of principal components explaining the target variance (86% by default).</li>
+        <li><strong>k-means.</strong> Cells are clustered in the reduced space with k-means++ (12 restarts). Clusters are numbered by their average distance to the city centre, so borough 1 is always the most central.</li>
+      </ol>
+      <p>Everything after the OSM extraction runs in your browser, so changing K, the feature groups, or the variance target re-clusters instantly. Cluster names are auto-generated from the most distinctive features; click a name to rename it.</p>
+      <h3>Caveats</h3>
+      <p>OSM coverage varies by city and by feature (e.g. trees and building heights are mapped very unevenly). Clusters describe the <em>mapped</em> city. Topos' original inputs also included image recognition, 311 complaints and other proprietary signals that have no OSM analogue.</p>
+      <p class="small muted">Source code and the extraction pipeline are on GitHub. Data extracted with the Overpass API; boundaries from Nominatim.</p>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
