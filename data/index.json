@@ -108,5 +108,27 @@
   ],
   "cells": 776,
   "generated": "2026-09-11"
+ },
+ {
+  "slug": "barcelona",
+  "name": "Barcelona",
+  "country": "Spain",
+  "center": [
+   2.1734,
+   41.3851
+  ],
+  "cells": 651,
+  "generated": "2026-09-11"
+ },
+ {
+  "slug": "la",
+  "name": "Los Angeles",
+  "country": "USA",
+  "center": [
+   -118.2437,
+   34.0522
+  ],
+  "cells": 801,
+  "generated": "2026-09-11"
  }
 ]
