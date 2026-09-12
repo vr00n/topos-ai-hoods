@@ -20,5 +20,93 @@
   ],
   "cells": 843,
   "generated": "2026-09-11"
+ },
+ {
+  "slug": "paris",
+  "name": "Paris",
+  "country": "France",
+  "center": [
+   2.347,
+   48.859
+  ],
+  "cells": 687,
+  "generated": "2026-09-11"
+ },
+ {
+  "slug": "berlin",
+  "name": "Berlin",
+  "country": "Germany",
+  "center": [
+   13.405,
+   52.52
+  ],
+  "cells": 843,
+  "generated": "2026-09-11"
+ },
+ {
+  "slug": "chicago",
+  "name": "Chicago",
+  "country": "USA",
+  "center": [
+   -87.6298,
+   41.8781
+  ],
+  "cells": 856,
+  "generated": "2026-09-11"
+ },
+ {
+  "slug": "sf",
+  "name": "San Francisco",
+  "country": "USA",
+  "center": [
+   -122.4194,
+   37.7749
+  ],
+  "cells": 792,
+  "generated": "2026-09-11"
+ },
+ {
+  "slug": "toronto",
+  "name": "Toronto",
+  "country": "Canada",
+  "center": [
+   -79.3832,
+   43.6532
+  ],
+  "cells": 817,
+  "generated": "2026-09-11"
+ },
+ {
+  "slug": "amsterdam",
+  "name": "Amsterdam",
+  "country": "Netherlands",
+  "center": [
+   4.8952,
+   52.3702
+  ],
+  "cells": 733,
+  "generated": "2026-09-11"
+ },
+ {
+  "slug": "boston",
+  "name": "Boston",
+  "country": "USA",
+  "center": [
+   -71.0589,
+   42.3601
+  ],
+  "cells": 831,
+  "generated": "2026-09-11"
+ },
+ {
+  "slug": "dc",
+  "name": "Washington, DC",
+  "country": "USA",
+  "center": [
+   -77.0365,
+   38.8977
+  ],
+  "cells": 776,
+  "generated": "2026-09-11"
  }
 ]

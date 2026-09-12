@@ -367,8 +367,14 @@ function setMapData() {
 }
 
 function fitToCity() {
+  // ignore far-flung outliers (e.g. San Francisco's Farallon Islands) when framing the city
+  const cells = state.data.cells;
+  const lons = cells.map(c => c.c[0]).sort((a, b) => a - b), lats = cells.map(c => c.c[1]).sort((a, b) => a - b);
+  const mlon = quantile(lons, 0.5), mlat = quantile(lats, 0.5), k = Math.cos(mlat * Math.PI / 180);
+  const dist = cells.map(c => Math.hypot((c.c[0] - mlon) * k, c.c[1] - mlat));
+  const cutoff = 2.5 * quantile(dist.slice().sort((a, b) => a - b), 0.95);
   const b = new maplibregl.LngLatBounds();
-  for (const c of state.data.cells) b.extend(c.c);
+  cells.forEach((c, i) => { if (dist[i] <= cutoff) b.extend(c.c); });
   map.fitBounds(b, { padding: { top: 30, right: 40, bottom: 40, left: 60 }, duration: 800 });
 }
 

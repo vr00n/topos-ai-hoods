@@ -158,6 +158,13 @@ class Overpass:
                 tail = r.text[-3000:]
                 if "runtime error" in tail or "Query timed out" in tail or "out of memory" in tail:
                     raise RuntimeError("overpass runtime error: " + tail[-160:].strip())
+                head = r.text[:300].lower()
+                if "<html" in head or "<!doctype" in head:
+                    # some mirrors answer errors / rate limits with an HTML page and status 200
+                    log(f"  HTML instead of data from {url.split('/')[2]}, retrying")
+                    self.ep += 1
+                    time.sleep(10)
+                    continue
                 return r.text
             last = f"HTTP {r.status_code}: {r.text[:160]}"
             if r.status_code == 504:
@@ -189,6 +196,17 @@ class Overpass:
                 raise
             log(f"  split (depth {depth}) after: {str(e)[:80]}")
             return self._split(body, cols, bbox, timeout, depth)
+        rows = self._parse_csv(txt, cols)
+        if not rows and bbox is not None and depth == 0:
+            # an empty answer for a whole city is almost always a silent failure; try another mirror
+            log("  empty CSV result, retrying on another mirror")
+            self.ep += 1
+            time.sleep(10)
+            rows = self._parse_csv(self._post(q, timeout), cols)
+        return rows
+
+    @staticmethod
+    def _parse_csv(txt, cols):
         rows = []
         rdr = csv.reader(io.StringIO(txt), delimiter="\t")
         for rec in rdr:
