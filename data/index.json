@@ -9,5 +9,16 @@
   ],
   "cells": 900,
   "generated": "2026-09-11"
+ },
+ {
+  "slug": "london",
+  "name": "London",
+  "country": "UK",
+  "center": [
+   -0.1276,
+   51.5074
+  ],
+  "cells": 843,
+  "generated": "2026-09-11"
  }
 ]

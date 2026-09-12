@@ -597,4 +597,4 @@ if __name__ == "__main__":
             build(by[s], args.target_cells, skip)
         except Exception as ex:
             log(f"!! {s} failed: {ex}")
-    update_index()
+        update_index()
